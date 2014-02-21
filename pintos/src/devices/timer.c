@@ -33,7 +33,7 @@ static void real_time_delay (int64_t num, int32_t denom);
 struct dormido {
   int64_t por_dormir;
   struct thread* t;
-  struct list-elem nodo;
+  struct list_elem nodo;
 };
 
 struct list dormidos;
