@@ -221,7 +221,7 @@ timer_interrupt (struct intr_frame *args UNUSED)
 }
 
 int
-comparator(struct list_elem elem, struct list_elem e, void *aux UNUSED)
+comparator(struct list_elem* elem, struct list_elem* e, void *aux UNUSED)
 {
   struct dormido a = list_entry(elem, struct dormido, nodo);
   struct dormido b = list_entry(e, struct dormido, nodo);
