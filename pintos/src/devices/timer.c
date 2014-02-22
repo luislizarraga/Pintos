@@ -109,12 +109,12 @@ void
 timer_sleep (int64_t ticks) 
 {
   struct dormido d;
-  d.t = thread.current();
+  d.t = thread_current();
   d.por_dormir = ticks+timer_ticks();
 
   enum intr_level old = intr_set_level(INTR_OFF);
   list_push_back(&dormidos, &d.nodo);
-  thread.block();
+  thread_block();
   intr_set_level(old);
 }
 
