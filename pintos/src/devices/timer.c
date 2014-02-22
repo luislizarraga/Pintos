@@ -223,8 +223,8 @@ timer_interrupt (struct intr_frame *args UNUSED)
 int
 comparator(struct list_elem* elem, struct list_elem* e, void *aux UNUSED)
 {
-  struct dormido a = list_entry(elem, struct dormido, nodo);
-  struct dormido b = list_entry(e, struct dormido, nodo);
+  struct dormido* a = list_entry(elem, struct dormido, nodo);
+  struct dormido* b = list_entry(e, struct dormido, nodo);
   if (a->por_dormir > b->por_dormir)
     return 1;
   return 0;
