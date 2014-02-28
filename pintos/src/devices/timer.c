@@ -112,18 +112,19 @@ comparator(const struct list_elem* elem, const struct list_elem* e, void *aux UN
   struct dormido* b = list_entry(e, struct dormido, nodo);
   /*if (a->por_dormir > b->por_dormir)
     return true;
-  */return (a->por_dormir > b->por_dormir);
+  */return (a->por_dormir < b->por_dormir);
 }
 
 void
 timer_sleep (int64_t ticks) 
 {
+  ASSERT (intr_get_level () == INTR_ON);
   struct dormido d;
   d.t = thread_current();
   d.por_dormir = timer_ticks() + ticks;
   //printf("pordormir : %d\n", d.por_dormir);
 
-  enum intr_level old = intr_set_level(INTR_OFF);
+  enum intr_level old = intr_disable();
   printf("timer sleep <1> \n");
   //list_push_back(&dormidos, &d.nodo);
   list_insert_ordered(&dormidos, &d.nodo, comparator, NULL);
