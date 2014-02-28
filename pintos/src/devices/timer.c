@@ -120,7 +120,7 @@ timer_sleep (int64_t ticks)
 {
   struct dormido d;
   d.t = thread_current();
-  d.por_dormir = ticks + timer_ticks();
+  d.por_dormir = timer_ticks() + ticks;
   //printf("pordormir : %d\n", d.por_dormir);
 
   enum intr_level old = intr_set_level(INTR_OFF);
@@ -215,7 +215,7 @@ timer_interrupt (struct intr_frame *args UNUSED)
     printf("timer interrupt <1> \n");
     nodo = list_begin(&dormidos),
     d = list_entry(nodo, struct dormido, nodo);
-    if (d->por_dormir == ticks) {
+    if (d->por_dormir <= ticks) {
       printf("timer interrupt <2> \n");
       thread_unblock(d->t);
       list_remove(nodo);
