@@ -126,7 +126,7 @@ timer_sleep (int64_t ticks)
   enum intr_level old = intr_set_level(INTR_OFF);
   printf("timer sleep <1> \n");
   //list_push_back(&dormidos, &d.nodo);
-  list_insert_ordered(&dormidos, &(d.nodo), &comparator, NULL);
+  list_insert_ordered(&dormidos, &d.nodo, comparator, NULL);
   thread_block();
   intr_set_level(old);
 }
