@@ -212,8 +212,8 @@ timer_interrupt (struct intr_frame *args UNUSED)
   struct dormido* d;
 
   
-    nod = list_begin(&dormidos),
-    d = list_entry(nod, struct dormido, nodo);
+    nodo = list_begin(&dormidos),
+    d = list_entry(nodo, struct dormido, nodo);
     if (d->por_dormir == ticks) {
       thread_unblock(d->t);
       list_remove(nodo);
