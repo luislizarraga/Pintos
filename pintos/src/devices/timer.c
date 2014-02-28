@@ -105,6 +105,16 @@ timer_sleep (int64_t ticks)
     thread_yield ();
 }*/
 
+bool
+comparator(const struct list_elem* elem, const struct list_elem* e, void *aux UNUSED)
+{
+  struct dormido* a = list_entry(elem, struct dormido, nodo);
+  struct dormido* b = list_entry(e, struct dormido, nodo);
+  /*if (a->por_dormir > b->por_dormir)
+    return true;
+  */return (a->por_dormir > b->por_dormir);
+}
+
 void
 timer_sleep (int64_t ticks) 
 {
@@ -222,15 +232,7 @@ timer_interrupt (struct intr_frame *args UNUSED)
   }*/
 }
 
-bool
-comparator(const struct list_elem* elem, const struct list_elem* e, void *aux UNUSED)
-{
-  struct dormido* a = list_entry(elem, struct dormido, nodo);
-  struct dormido* b = list_entry(e, struct dormido, nodo);
-  /*if (a->por_dormir > b->por_dormir)
-    return true;
-  */return (a->por_dormir > b->por_dormir);
-}
+
 
 
 /* Returns true if LOOPS iterations waits for more than one timer
