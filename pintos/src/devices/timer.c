@@ -120,7 +120,7 @@ timer_sleep (int64_t ticks)
 {
   struct dormido d;
   d.t = thread_current();
-  d.por_dormir = ticks+timer_ticks();
+  d.por_dormir = ticks + timer_ticks();
   //printf("pordormir : %d\n", d.por_dormir);
 
   enum intr_level old = intr_set_level(INTR_OFF);
