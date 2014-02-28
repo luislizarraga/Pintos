@@ -218,10 +218,9 @@ timer_interrupt (struct intr_frame *args UNUSED)
       d = list_entry(nodo, struct dormido, nodo);
       if (d->por_dormir <= ticks) {
         printf("timer interrupt <2> \n");
-        thread_unblock(d->t);
         nodo = list_remove(nodo);
+        thread_unblock(d->t);
       } else {
-        printf("timer interrupt <3> \n");
         break;
       }
     }
