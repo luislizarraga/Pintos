@@ -111,7 +111,7 @@ timer_sleep (int64_t ticks)
   struct dormido d;
   d.t = thread_current();
   d.por_dormir = ticks+timer_ticks();
-  printf("pordormir : %d\n", d.por_dormir);
+  //printf("pordormir : %d\n", d.por_dormir);
 
   enum intr_level old = intr_set_level(INTR_OFF);
   //list_push_back(&dormidos, &d.nodo);
@@ -222,7 +222,7 @@ timer_interrupt (struct intr_frame *args UNUSED)
   }*/
 }
 
-typedef bool
+bool
 comparator(const struct list_elem* elem, const struct list_elem* e, void *aux UNUSED)
 {
   struct dormido* a = list_entry(elem, struct dormido, nodo);
