@@ -208,7 +208,7 @@ timer_interrupt (struct intr_frame *args UNUSED)
   ticks++;
   thread_tick ();
 
-  struct list_elem* nod;
+  struct list_elem* nodo;
   struct dormido* d;
 
   
