@@ -114,7 +114,8 @@ timer_sleep (int64_t ticks)
   printf("pordormir : %d\n", d.por_dormir);
 
   enum intr_level old = intr_set_level(INTR_OFF);
-  list_push_back(&dormidos, &d.nodo);
+  //list_push_back(&dormidos, &d.nodo);
+  list_insert_ordered(&dormidos, &d.nodo, &comparator, NULL);
   thread_block();
   intr_set_level(old);
 }
