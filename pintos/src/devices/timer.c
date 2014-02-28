@@ -212,13 +212,17 @@ timer_interrupt (struct intr_frame *args UNUSED)
   struct list_elem* nodo;
   struct dormido* d;
 
-    printf("timer interrupt <1> \n");
-    nodo = list_begin(&dormidos),
-    d = list_entry(nodo, struct dormido, nodo);
-    if (d->por_dormir <= ticks) {
-      printf("timer interrupt <2> \n");
-      thread_unblock(d->t);
-      list_remove(nodo);
+    for(nodo= list_begin(&dormidos); nodo != list_end(&dormidos);) {
+      printf("timer interrupt <1> \n");
+      //nodo = list_begin(&dormidos),
+      d = list_entry(nodo, struct dormido, nodo);
+      if (d->por_dormir <= ticks) {
+        printf("timer interrupt <2> \n");
+        thread_unblock(d->t);
+        nodo = list_remove(nodo);
+      } else {
+        break;
+      }
     }
   
 
