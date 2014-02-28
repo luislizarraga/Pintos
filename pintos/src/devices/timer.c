@@ -221,6 +221,7 @@ timer_interrupt (struct intr_frame *args UNUSED)
         thread_unblock(d->t);
         nodo = list_remove(nodo);
       } else {
+        printf("timer interrupt <3> \n");
         break;
       }
     }
