@@ -20,7 +20,7 @@
    of thread.h for details. */
 #define THREAD_MAGIC 0xcd6abf4b
 
-static int*[] ready_list_new;
+static int* ready_list_new[64];
 
 
 /* List of processes in THREAD_READY state, that is, processes
