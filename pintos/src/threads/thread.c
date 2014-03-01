@@ -255,7 +255,7 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
-  int current_priority = t->thread_get_priority();
+  int current_priority = t->priority;
   if (highest_priority < current_priority)
     highest_priority = current_priority;
   list_push_back(&ready_list_new[current_priority], &t->elem);
