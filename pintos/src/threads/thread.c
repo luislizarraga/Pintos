@@ -95,6 +95,7 @@ thread_init (void)
   lock_init (&tid_lock);
   int i;
   for (i = 0; i <= PRI_MAX; i++) {
+    ready_list_new[i] = struct list a;
     list_init(ready_list_new[i]);
   }
   list_init (&ready_list);
