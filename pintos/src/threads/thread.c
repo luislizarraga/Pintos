@@ -20,7 +20,7 @@
    of thread.h for details. */
 #define THREAD_MAGIC 0xcd6abf4b
 
-static int* ready_list_new[64];
+static struct list ready_list_new[64];
 
 
 /* List of processes in THREAD_READY state, that is, processes
@@ -95,8 +95,8 @@ thread_init (void)
   lock_init (&tid_lock);
   int i;
   for (i = 0; i <= PRI_MAX; i++) {
-    ready_list_new[i] = struct list a;
-    list_init(&ready_list_new[i]);
+    //ready_list_new[i] = struct list a;
+    list_init(ready_list_new[i]);
   }
   list_init (&ready_list);
   list_init (&all_list);
