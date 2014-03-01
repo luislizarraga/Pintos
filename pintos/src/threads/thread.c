@@ -21,6 +21,7 @@
 #define THREAD_MAGIC 0xcd6abf4b
 
 static struct list ready_list_new[64];
+static int highest_priority;
 
 
 /* List of processes in THREAD_READY state, that is, processes
@@ -100,6 +101,7 @@ thread_init (void)
   }
   list_init (&ready_list);
   list_init (&all_list);
+  highest_priority = 0;
 
   /* Set up a thread structure for the running thread. */
   initial_thread = running_thread ();
@@ -253,6 +255,10 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
+  int current_priority = t->thread_get_priority();
+  if (highest_priority < current_priority)
+    highest_priority = current_priority;
+  list_push_back(&ready_list_new[current_priority], &t->elem);
   list_push_back (&ready_list, &t->elem);
   t->status = THREAD_READY;
   intr_set_level (old_level);
