@@ -93,7 +93,10 @@ thread_init (void)
   ASSERT (intr_get_level () == INTR_OFF);
 
   lock_init (&tid_lock);
-
+  int i;
+  for (i = 0; i <= PRI_MAX; i++) {
+    list_init(ready_list_new[i]);
+  }
   list_init (&ready_list);
   list_init (&all_list);
 
