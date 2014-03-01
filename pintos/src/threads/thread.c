@@ -96,7 +96,7 @@ thread_init (void)
   int i;
   for (i = 0; i <= PRI_MAX; i++) {
     ready_list_new[i] = struct list a;
-    list_init(ready_list_new[i]);
+    list_init(&ready_list_new[i]);
   }
   list_init (&ready_list);
   list_init (&all_list);
