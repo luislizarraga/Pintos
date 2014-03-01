@@ -125,7 +125,6 @@ timer_sleep (int64_t ticks)
   //printf("pordormir : %d\n", d.por_dormir);
 
   enum intr_level old = intr_disable();
-  printf("timer sleep <1> \n");
   //list_push_back(&dormidos, &d.nodo);
   list_insert_ordered(&dormidos, &d.nodo, comparator, NULL);
   thread_block();
@@ -214,11 +213,9 @@ timer_interrupt (struct intr_frame *args UNUSED)
   struct dormido* d;
 
     for(nodo= list_begin(&dormidos); nodo != list_end(&dormidos);) {
-      printf("timer interrupt <1> \n");
       //nodo = list_begin(&dormidos),
       d = list_entry(nodo, struct dormido, nodo);
       if (d->por_dormir <= ticks) {
-        printf("timer interrupt <2> \n");
         nodo = list_remove(nodo);
         thread_unblock(d->t);
       } else {
