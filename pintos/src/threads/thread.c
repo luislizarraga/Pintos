@@ -329,8 +329,13 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
-  if (cur != idle_thread) 
+  if (cur != idle_thread) {
     list_push_back (&ready_list, &cur->elem);
+    int current_priority = t->priority;
+    if (highest_priority < current_priority)
+      highest_priority = current_priority;
+    list_push_back(&ready_list_new[current_priority], &t->elem);
+  }
   cur->status = THREAD_READY;
   schedule ();
   intr_set_level (old_level);
@@ -510,7 +515,7 @@ next_thread_to_run (void)
   if (list_empty (&ready_list))
     return idle_thread;
   else
-    return list_entry (list_pop_front (&ready_list), struct thread, elem);
+    return list_entry (list_pop_front (&ready_list_new[highest_priority]), struct thread, elem);
 }
 
 /* Completes a thread switch by activating the new thread's page
