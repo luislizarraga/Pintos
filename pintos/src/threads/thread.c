@@ -337,7 +337,7 @@ thread_yield (void)
     int current_priority = cur->priority;
     if (highest_priority < current_priority)
       highest_priority = current_priority;
-    list_push_back(&ready_list_new[current_priority], &cur->elem);
+    //list_push_back(&ready_list_new[current_priority], &cur->elem);
     printf("thread yield <2>\n");
   }
   cur->status = THREAD_READY;
