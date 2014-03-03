@@ -529,6 +529,7 @@ next_thread_to_run (void)
         break;
       }
     }
+    printf("highest %d\n", highest_priority);
     return list_entry (list_pop_front (&ready_list_new[old_priority]), struct thread, elem);
   }
 }
