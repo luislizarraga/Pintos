@@ -255,14 +255,14 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
-  printf("thread unblock <1>\n");
+  //printf("thread unblock <1>\n");
   int current_priority = t->priority;
   if (highest_priority < current_priority)
     highest_priority = current_priority;
   list_push_back(&ready_list_new[current_priority], &t->elem);
   //list_push_back (&ready_list, &t->elem);
   t->status = THREAD_READY;
-  printf("thread unblock <2>\n");
+  //printf("thread unblock <2>\n");
   intr_set_level (old_level);
 }
 
@@ -331,14 +331,14 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
-  printf("thread yield <1>\n");
+  //printf("thread yield <1>\n");
   if (cur != idle_thread) {
     //list_push_back (&ready_list, &cur->elem);
     int current_priority = cur->priority;
     if (highest_priority < current_priority)
       highest_priority = current_priority;
     list_push_back(&ready_list_new[current_priority], &cur->elem);
-    printf("thread yield <2>\n");
+    //printf("thread yield <2>\n");
   }
   cur->status = THREAD_READY;
   schedule ();
