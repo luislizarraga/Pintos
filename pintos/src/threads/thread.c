@@ -524,7 +524,7 @@ next_thread_to_run (void)
     int i;
     for (i = highest_priority; i >= 0; --i)
     {
-      if (!list_empty(&ready_list_new[i]) {
+      if (!list_empty(&ready_list_new[i])) {
         highest_priority = i;
         break;
       }
