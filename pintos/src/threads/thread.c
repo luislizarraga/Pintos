@@ -516,7 +516,7 @@ alloc_frame (struct thread *t, size_t size)
 static struct thread *
 next_thread_to_run (void) 
 {
-  if (list_empty (&ready_list))
+  if (list_empty (&ready_list_new[highest_priority]))
     return idle_thread;
   else
     return list_entry (list_pop_front (&ready_list_new[highest_priority]), struct thread, elem);
