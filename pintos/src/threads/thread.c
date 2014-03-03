@@ -260,7 +260,7 @@ thread_unblock (struct thread *t)
   if (highest_priority < current_priority)
     highest_priority = current_priority;
   list_push_back(&ready_list_new[current_priority], &t->elem);
-  list_push_back (&ready_list, &t->elem);
+  //list_push_back (&ready_list, &t->elem);
   t->status = THREAD_READY;
   printf("thread unblock <2>\n");
   intr_set_level (old_level);
@@ -333,11 +333,11 @@ thread_yield (void)
   old_level = intr_disable ();
   printf("thread yield <1>\n");
   if (cur != idle_thread) {
-    list_push_back (&ready_list, &cur->elem);
+    //list_push_back (&ready_list, &cur->elem);
     int current_priority = cur->priority;
     if (highest_priority < current_priority)
       highest_priority = current_priority;
-    //list_push_back(&ready_list_new[current_priority], &cur->elem);
+    list_push_back(&ready_list_new[current_priority], &cur->elem);
     printf("thread yield <2>\n");
   }
   cur->status = THREAD_READY;
