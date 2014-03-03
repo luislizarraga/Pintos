@@ -259,6 +259,7 @@ thread_unblock (struct thread *t)
   int current_priority = t->priority;
   if (highest_priority < current_priority)
     highest_priority = current_priority;
+  printf("highest %d\n", highest_priority);
   list_push_back(&ready_list_new[current_priority], &t->elem);
   //list_push_back (&ready_list, &t->elem);
   t->status = THREAD_READY;
@@ -529,7 +530,7 @@ next_thread_to_run (void)
         break;
       }
     }
-    printf("highest %d\n", highest_priority);
+    //printf("highest %d\n", highest_priority);
     return list_entry (list_pop_front (&ready_list_new[old_priority]), struct thread, elem);
   }
 }
