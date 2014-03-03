@@ -265,6 +265,10 @@ thread_unblock (struct thread *t)
   t->status = THREAD_READY;
   //printf("thread unblock <2>\n");
   intr_set_level (old_level);
+  if (intr_context())
+    intr_yield_on_return();
+  else
+    thread_yield();
 }
 
 /* Returns the name of the running thread. */
