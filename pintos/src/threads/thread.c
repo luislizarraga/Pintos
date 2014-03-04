@@ -516,8 +516,9 @@ next_thread_to_run (void)
     return idle_thread;
   else {
     int old_priority = highest_priority;
+    highest_priority = 0
     int i;
-    for (i = highest_priority; i >= 0; --i)
+    for (i = old_priority; i >= 0; --i)
     {
       if (!list_empty(&ready_list[i])) {
         highest_priority = i;
