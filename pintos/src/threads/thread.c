@@ -20,7 +20,7 @@
    of thread.h for details. */
 #define THREAD_MAGIC 0xcd6abf4b
 
-static struct list ready_list_new[64];
+static struct list ready_list[64];
 int highest_priority;
 
 
@@ -96,8 +96,8 @@ thread_init (void)
   lock_init (&tid_lock);
   int i;
   for (i = 0; i <= PRI_MAX; i++) {
-    //ready_list_new[i] = struct list a;
-    list_init(&ready_list_new[i]);
+    //ready_list[i] = struct list a;
+    list_init(&ready_list[i]);
   }
   //list_init (&ready_list);
   list_init (&all_list);
@@ -256,7 +256,7 @@ thread_unblock (struct thread *t)
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
   int current_priority = t->priority;
-  list_push_back(&ready_list_new[current_priority], &t->elem);
+  list_push_back(&ready_list[current_priority], &t->elem);
   if (highest_priority < current_priority)
     highest_priority = current_priority;
   //list_push_back (&ready_list, &t->elem);
@@ -331,8 +331,8 @@ thread_yield (void)
   old_level = intr_disable ();
   int current_priority = cur->priority;
   if (cur != idle_thread) {
-    //list_push_back (&ready_list_new[cu], &cur->elem);
-    list_push_back(&ready_list_new[current_priority], &cur->elem);
+    //list_push_back (&ready_list[cu], &cur->elem);
+    list_push_back(&ready_list[current_priority], &cur->elem);
   }
   if (highest_priority < current_priority)
     highest_priority = current_priority;
@@ -512,19 +512,19 @@ alloc_frame (struct thread *t, size_t size)
 static struct thread *
 next_thread_to_run (void) 
 {
-  if (highest_priority == 0 && list_empty(&ready_list_new[0]))
+  if (highest_priority == 0 && list_empty(&ready_list[0]))
     return idle_thread;
   else {
     int old_priority = highest_priority;
     int i;
     for (i = highest_priority; i >= 0; --i)
     {
-      if (!list_empty(&ready_list_new[i])) {
+      if (!list_empty(&ready_list[i])) {
         highest_priority = i;
         break;
       }
     }
-    return list_entry (list_pop_front (&ready_list_new[old_priority]), struct thread, elem);
+    return list_entry (list_pop_front (&ready_list[old_priority]), struct thread, elem);
   }
 }
 
