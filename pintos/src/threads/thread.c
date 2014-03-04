@@ -21,12 +21,12 @@
 #define THREAD_MAGIC 0xcd6abf4b
 
 static struct list ready_list_new[64];
-static int highest_priority;
+int highest_priority;
 
 
 /* List of processes in THREAD_READY state, that is, processes
    that are ready to run but not actually running. */
-static struct list ready_list;
+//static struct list ready_list;
 
 /* List of all processes.  Processes are added to this list
    when they are first scheduled and removed when they exit. */
@@ -99,7 +99,7 @@ thread_init (void)
     //ready_list_new[i] = struct list a;
     list_init(&ready_list_new[i]);
   }
-  list_init (&ready_list);
+  //list_init (&ready_list);
   list_init (&all_list);
   highest_priority = 0;
 
@@ -255,15 +255,12 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
-  //printf("thread unblock <1>\n");
   int current_priority = t->priority;
+  list_push_back(&ready_list_new[current_priority], &t->elem);
   if (highest_priority < current_priority)
     highest_priority = current_priority;
-  printf("highest %d\n", highest_priority);
-  list_push_back(&ready_list_new[current_priority], &t->elem);
   //list_push_back (&ready_list, &t->elem);
   t->status = THREAD_READY;
-  //printf("thread unblock <2>\n");
   intr_set_level (old_level);
 }
 
@@ -332,15 +329,13 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
-  int current_priority = cur->priority;
-  if (highest_priority < current_priority)
-    highest_priority = current_priority;
-  //printf("thread yield <1>\n");
+  int current_priority = cur->priority
   if (cur != idle_thread) {
     //list_push_back (&ready_list_new[cu], &cur->elem);
     list_push_back(&ready_list_new[current_priority], &cur->elem);
-    //printf("thread yield <2>\n");
   }
+  if (highest_priority < current_priority)
+    highest_priority = current_priority;
   cur->status = THREAD_READY;
   schedule ();
   intr_set_level (old_level);
@@ -517,7 +512,7 @@ alloc_frame (struct thread *t, size_t size)
 static struct thread *
 next_thread_to_run (void) 
 {
-  if (list_empty (&ready_list_new[highest_priority]))
+  if (highest_priority == 0 && list_empty(&ready_list_new[0]))
     return idle_thread;
   else {
     int old_priority = highest_priority;
@@ -529,7 +524,6 @@ next_thread_to_run (void)
         break;
       }
     }
-    //printf("highest %d\n", highest_priority);
     return list_entry (list_pop_front (&ready_list_new[old_priority]), struct thread, elem);
   }
 }
