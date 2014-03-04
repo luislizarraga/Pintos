@@ -329,7 +329,7 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
-  int current_priority = cur->priority
+  int current_priority = cur->priority;
   if (cur != idle_thread) {
     //list_push_back (&ready_list_new[cu], &cur->elem);
     list_push_back(&ready_list_new[current_priority], &cur->elem);
