@@ -354,23 +354,6 @@ thread_foreach (thread_action_func *func, void *aux)
     }
 }
 
-static void
-update_highest_priority(void)
-{
-  if (!list_empty (&ready_list[highest_priority]))
-    return;
-
-  int old_priority = highest_priority;
-  highest_priority = 0;
-  int i;
-  for (i = old_priority-1; i >= 0; i--)
-  {
-    if (!list_empty (&ready_list[i]))
-      highest_priority = i;
-      return;
-  }
-}
-
 /* Sets the current thread's priority to NEW_PRIORITY. */
 void
 thread_set_priority (int new_priority) 
@@ -378,13 +361,10 @@ thread_set_priority (int new_priority)
   thread_current ()->priority = new_priority;
   
   if (new_priority < highest_priority) {
-    update_highest_priority();
     if (intr_context())
       intr_yield_on_return();
     else
       thread_yield();
-  } else {
-    highest_priority = new_priority;
   }
 }
 
@@ -528,7 +508,22 @@ alloc_frame (struct thread *t, size_t size)
 }
 
 
+static void
+update_highest_priority(void)
+{
+  if (!list_empty (&ready_list[highest_priority]))
+    return;
 
+  int old_priority = highest_priority;
+  highest_priority = 0;
+  int i;
+  for (i = old_priority-1; i >= 0; i--)
+  {
+    if (!list_empty (&ready_list[i]))
+      highest_priority = i;
+      return;
+  }
+}
 
 
 
@@ -540,7 +535,7 @@ alloc_frame (struct thread *t, size_t size)
 static struct thread *
 next_thread_to_run (void) 
 {
-  if (list_empty (&ready_list[highest_priority]) && highest_priority == 0)
+  if (list_empty (&ready_list[0]) && highest_priority == 0)
     return idle_thread;
   else {
     struct thread* t = list_entry (list_pop_front (&ready_list[highest_priority]), struct thread, elem);
