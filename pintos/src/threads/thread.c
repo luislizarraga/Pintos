@@ -257,9 +257,9 @@ thread_unblock (struct thread *t)
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
   list_push_back (&ready_list[t->priority], &t->elem);
-  t->status = THREAD_READY;
   if (highest_priority < t->priority)
     highest_priority = t->priority;
+  t->status = THREAD_READY;
   intr_set_level (old_level);
 }
 
@@ -330,9 +330,9 @@ thread_yield (void)
   old_level = intr_disable ();
   if (cur != idle_thread) 
     list_push_back (&ready_list[cur->priority], &cur->elem);
-  cur->status = THREAD_READY;
   if (highest_priority < cur->priority)
     highest_priority = cur->priority;
+  cur->status = THREAD_READY;
   schedule ();
   intr_set_level (old_level);
 }
@@ -354,6 +354,25 @@ thread_foreach (thread_action_func *func, void *aux)
     }
 }
 
+
+static void
+update_highest_priority(void)
+{
+  if (!list_empty (&ready_list[highest_priority]))
+    return;
+
+  int old_priority = highest_priority;
+  highest_priority = 0;
+  int i;
+  for (i = old_priority-1; i >= 0; i--)
+  {
+    if (!list_empty (&ready_list[i]))
+      highest_priority = i;
+      return;
+  }
+}
+
+
 /* Sets the current thread's priority to NEW_PRIORITY. */
 void
 thread_set_priority (int new_priority) 
@@ -361,6 +380,7 @@ thread_set_priority (int new_priority)
   thread_current ()->priority = new_priority;
   
   if (new_priority < highest_priority) {
+    update_highest_priority();
     if (intr_context())
       intr_yield_on_return();
     else
@@ -505,24 +525,6 @@ alloc_frame (struct thread *t, size_t size)
 
   t->stack -= size;
   return t->stack;
-}
-
-
-static void
-update_highest_priority(void)
-{
-  if (!list_empty (&ready_list[highest_priority]))
-    return;
-
-  int old_priority = highest_priority;
-  highest_priority = 0;
-  int i;
-  for (i = old_priority-1; i >= 0; i--)
-  {
-    if (!list_empty (&ready_list[i]))
-      highest_priority = i;
-      return;
-  }
 }
 
 
