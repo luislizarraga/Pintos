@@ -253,7 +253,7 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
-  printf("highest_priority %d this priority %d\n", highest_priority, cur->priority);
+  printf("highest_priority %d this priority %d\n", highest_priority, t->priority);
   list_push_back (&ready_list[t->priority], &t->elem);
   t->status = THREAD_READY;
   if (highest_priority < t->priority)
