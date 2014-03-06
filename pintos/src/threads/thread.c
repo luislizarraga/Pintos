@@ -361,6 +361,7 @@ thread_set_priority (int new_priority)
   thread_current ()->priority = new_priority;
   
   if (new_priority < highest_priority) {
+    update_highest_priority();
     if (intr_context())
       intr_yield_on_return();
     else
