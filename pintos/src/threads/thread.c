@@ -20,7 +20,7 @@
    of thread.h for details. */
 #define THREAD_MAGIC 0xcd6abf4b
 
-static struct list[] ready_list[64];
+static struct list ready_list[64];
 static int highest_priority;
 
 /* List of processes in THREAD_READY state, that is, processes
