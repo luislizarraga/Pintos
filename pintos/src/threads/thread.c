@@ -20,13 +20,12 @@
    of thread.h for details. */
 #define THREAD_MAGIC 0xcd6abf4b
 
-static struct list ready_list[64];
-int highest_priority;
+static struct list[] ready_list_new;
 
 
 /* List of processes in THREAD_READY state, that is, processes
    that are ready to run but not actually running. */
-//static struct list ready_list;
+static struct list ready_list;
 
 /* List of all processes.  Processes are added to this list
    when they are first scheduled and removed when they exit. */
@@ -94,14 +93,9 @@ thread_init (void)
   ASSERT (intr_get_level () == INTR_OFF);
 
   lock_init (&tid_lock);
-  int i;
-  for (i = 0; i <= PRI_MAX; i++) {
-    //ready_list[i] = struct list a;
-    list_init(&ready_list[i]);
-  }
-  //list_init (&ready_list);
+
+  list_init (&ready_list);
   list_init (&all_list);
-  highest_priority = 0;
 
   /* Set up a thread structure for the running thread. */
   initial_thread = running_thread ();
@@ -255,11 +249,7 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
-  int current_priority = t->priority;
-  list_push_back(&ready_list[current_priority], &t->elem);
-  if (highest_priority < current_priority)
-    highest_priority = current_priority;
-  //list_push_back (&ready_list, &t->elem);
+  list_push_back (&ready_list, &t->elem);
   t->status = THREAD_READY;
   intr_set_level (old_level);
 }
@@ -329,13 +319,8 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
-  int current_priority = cur->priority;
-  if (cur != idle_thread) {
-    //list_push_back (&ready_list[cu], &cur->elem);
-    list_push_back(&ready_list[current_priority], &cur->elem);
-  }
-  if (highest_priority < current_priority)
-    highest_priority = current_priority;
+  if (cur != idle_thread) 
+    list_push_back (&ready_list, &cur->elem);
   cur->status = THREAD_READY;
   schedule ();
   intr_set_level (old_level);
@@ -512,21 +497,10 @@ alloc_frame (struct thread *t, size_t size)
 static struct thread *
 next_thread_to_run (void) 
 {
-  if (highest_priority == 0 && list_empty(&ready_list[0]))
+  if (list_empty (&ready_list))
     return idle_thread;
-  else {
-    int old_priority = highest_priority;
-    highest_priority = 0;
-    int i;
-    for (i = old_priority; i >= 0; i--)
-    {
-      if (!list_empty(&ready_list[i])) {
-        highest_priority = i;
-        break;
-      }
-    }
-    return list_entry (list_pop_front (&ready_list[old_priority]), struct thread, elem);
-  }
+  else
+    return list_entry (list_pop_front (&ready_list), struct thread, elem);
 }
 
 /* Completes a thread switch by activating the new thread's page
