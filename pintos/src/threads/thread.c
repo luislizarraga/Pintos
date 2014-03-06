@@ -236,6 +236,9 @@ thread_block (void)
   schedule ();
 }
 
+
+
+
 /* Transitions a blocked thread T to the ready-to-run state.
    This is an error if T is not blocked.  (Use thread_yield() to
    make the running thread ready.)
@@ -253,7 +256,6 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
-  printf("highest_priority %d this priority %d\n", highest_priority, t->priority);
   list_push_back (&ready_list[t->priority], &t->elem);
   t->status = THREAD_READY;
   if (highest_priority < t->priority)
@@ -326,7 +328,6 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
-  printf("highest_priority %d this priority %d\n", highest_priority, cur->priority);
   if (cur != idle_thread) 
     list_push_back (&ready_list[cur->priority], &cur->elem);
   cur->status = THREAD_READY;
@@ -358,6 +359,15 @@ void
 thread_set_priority (int new_priority) 
 {
   thread_current ()->priority = new_priority;
+  
+  if (new_priority < highest_priority) {
+    if (intr_context())
+      intr_yield_on_return;
+    else
+      thread_yield();
+  } else {
+    highest_priority = new_priority;
+  }
 }
 
 /* Returns the current thread's priority. */
