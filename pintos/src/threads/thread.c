@@ -253,6 +253,7 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
+  printf("highest_priority %d this priority %d\n", highest_priority, cur->priority);
   list_push_back (&ready_list[t->priority], &t->elem);
   t->status = THREAD_READY;
   if (highest_priority < t->priority)
@@ -325,6 +326,7 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
+  printf("highest_priority %d this priority %d\n", highest_priority, cur->priority);
   if (cur != idle_thread) 
     list_push_back (&ready_list[cur->priority], &cur->elem);
   cur->status = THREAD_READY;
@@ -503,7 +505,7 @@ update_highest_priority(void)
 {
   if (!list_empty (&ready_list[highest_priority]))
     return;
-  
+
   int old_priority = highest_priority;
   highest_priority = 0;
   int i;
